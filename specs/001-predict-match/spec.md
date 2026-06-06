@@ -8,6 +8,12 @@
 
 **Input**: User description: "Develop the Football Pool Prediction Assistant, an interactive web application designed to help users determine match outcomes for their football pools. It should allow users to select two international teams, Team A and Team B, from an interactive dropdown or autocomplete list populated by all valid unique countries in the historical dataset. In this initial phase, let's call it "Predict Match," the user interface will focus strictly on a single, one-on-one match setup. There will be no bulk uploading or complex configuration screens. When the user selects the two teams and triggers the calculation, the main view must immediately present the prediction. It will display the most likely overall outcome as Team A Wins, Draw, or Team B Wins, alongside the single most probable exact final scoreline. To maintain transparency, the interface will also show a visual distribution matrix of alternative scores so the user can see the underlying confidence of the prediction. The backend logic will process the historical match records by giving exponentially higher statistical weight to games played in the last 12 to 24 months, ensuring recent form drives the outcome. It will also penalize friendly matches and give high priority to official tournament matches. Unless one of the selected teams is the actual tournament host country, the system will simulate the match under neutral ground rules, eliminating standard home-field advantages. If the two selected teams have no direct head-to-head history, the system will automatically fall back to regional competitive averages to ensure the simulation completes successfully without errors or blank states."
 
+## Clarifications
+
+### Session 2026-06-06
+
+- Q: How should the system determine and accept which team is the tournament host country? → A: UI Checkboxes: Simple interactive checkbox toggles next to Team A and Team B in the UI (e.g., "Host Country").
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Match Selection & Outcome View (Priority: P1)
@@ -52,7 +58,7 @@ Users want to view a visual matrix of alternative score probabilities to underst
 - **No Direct Head-to-Head History**: What happens if the two selected teams have never played each other?
   - *Resolution*: The system must automatically fall back to regional competitive averages to compute the simulation without raising an error.
 - **Neutral Ground Rules vs Host Country**: How does the system handle home-field advantage?
-  - *Resolution*: The system simulates the match under neutral ground rules (home advantage set to 0), unless one of the selected teams is verified as the actual tournament host country.
+  - *Resolution*: The system simulates the match under neutral ground rules (home advantage set to 0), unless the user checks the "Host Country" checkbox for either Team A or Team B in the UI.
 
 ## Requirements *(mandatory)*
 
@@ -65,7 +71,7 @@ Users want to view a visual matrix of alternative score probabilities to underst
 - **FR-005**: The backend logic MUST apply an exponential temporal decay function to historical matches, assigning exponentially higher weight to games played in the last 12 to 24 months.
 - **FR-006**: The model calculations MUST apply match-type weighting, penalizing friendly matches and prioritizing official tournament matches.
 - **FR-007**: The system MUST simulate matches under neutral ground rules (no home-field advantage) by default.
-- **FR-008**: The system MUST bypass neutral ground rules if one of the selected teams is identified as the actual tournament host country.
+- **FR-008**: The system MUST bypass neutral ground rules if the user checks the corresponding "Host Country" checkbox for either Team A or Team B in the UI.
 - **FR-009**: If the two selected teams have no direct head-to-head match history, the system MUST automatically fall back to regional competitive averages to complete the prediction.
 - **FR-010**: The system MUST show a visual distribution matrix of alternative score probabilities.
 - **FR-011**: All analytics calculation functions MUST be implemented as pure functions with full type hinting.
