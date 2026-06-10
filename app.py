@@ -196,7 +196,7 @@ st.markdown('<div style="text-align: center; margin-bottom: 2rem;">', unsafe_all
 predict_clicked = st.button("Calculate Prediction", disabled=calculate_disabled, type="primary", use_container_width=True)
 st.markdown('</div>', unsafe_allow_html=True)
 
-def render_matrix_html(matrix: List[List[float]], exact_score: Tuple[int, int]) -> str:
+def render_matrix_html(matrix: List[List[float]], exact_score: Tuple[int, int], team_b: str) -> str:
     """
     Renders the 5x5 alternative score matrix as a beautiful HTML heat table.
     """
@@ -258,6 +258,7 @@ def render_matrix_html(matrix: List[List[float]], exact_score: Tuple[int, int]) 
     <th class="matrix-header">3</th>
     <th class="matrix-header">4</th>
 </tr>"""
+    html = html.replace("{team_b}", team_b)
     for i in range(5):
         html += f"<tr><td class='matrix-row-label'>{i}</td>"
         for j in range(5):
@@ -350,7 +351,7 @@ if predict_clicked and not calculate_disabled:
     st.markdown("<h3 style='margin-top: 2rem; color: #FFFFFF; font-size: 1.3rem; margin-bottom: 0.5rem;'>Alternative Score Probability Matrix</h3>", unsafe_allow_html=True)
     st.markdown(f"<p style='color: #A0AEC0; font-size: 0.9rem; margin-bottom: 1.5rem;'>The heat map below visualizes the probability distribution of alternative scorelines up to 4-4. The neon cyan highlighted cell indicates the most likely scoreline.</p>", unsafe_allow_html=True)
     
-    matrix_html = render_matrix_html(res["score_matrix"], res["exact_score"])
+    matrix_html = render_matrix_html(res["score_matrix"], res["exact_score"], team_b)
     st.markdown(matrix_html, unsafe_allow_html=True)
 
     # Expected goals breakdown
