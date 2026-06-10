@@ -65,10 +65,16 @@ STATIC_CONFEDERATIONS = {
 @st.cache_data
 def load_historical_matches(filepath: str) -> pl.DataFrame:
     """
-    Load results.csv into a Polars DataFrame, parsing the date column.
+    Load results.csv into a Polars DataFrame, parsing the date column,
+    treating "NA" as null values, and dropping rows with null scores.
     """
-    df = pl.read_csv(filepath)
-    df = df.with_columns(pl.col("date").str.to_date("%Y-%m-%d"))
+    df = pl.read_csv(filepath, null_values=["NA"])
+    df = df.filter(pl.col("home_score").is_not_null() & pl.col("away_score").is_not_null())
+    df = df.with_columns([
+        pl.col("date").str.to_date("%Y-%m-%d"),
+        pl.col("home_score").cast(pl.Int64),
+        pl.col("away_score").cast(pl.Int64)
+    ])
     return df
 
 @st.cache_data
