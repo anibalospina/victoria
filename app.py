@@ -202,64 +202,62 @@ def render_matrix_html(matrix: List[List[float]], exact_score: Tuple[int, int]) 
     """
     max_prob = max(max(row) for row in matrix)
     
-    html = """
-    <style>
-        .matrix-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 6px;
-            font-family: 'Inter', sans-serif;
-            margin-top: 1rem;
-        }
-        .matrix-header {
-            text-align: center;
-            font-weight: 600;
-            color: #A0AEC0;
-            font-size: 0.85rem;
-            padding: 8px;
-        }
-        .matrix-row-label {
-            font-weight: 600;
-            color: #A0AEC0;
-            font-size: 0.85rem;
-            text-align: right;
-            padding-right: 12px;
-            width: 80px;
-        }
-        .matrix-cell {
-            text-align: center;
-            border-radius: 8px;
-            padding: 10px 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #FFFFFF;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-        .matrix-cell:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            z-index: 10;
-        }
-        .highlight-cell {
-            border: 2px solid #00F0FF !important;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
-        }
-    </style>
-    <table class="matrix-table">
-        <tr>
-            <th></th>
-            <th colspan="5" class="matrix-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">Away Team Goals ({team_b})</th>
-        </tr>
-        <tr>
-            <th class="matrix-header" style="text-align: right; padding-right: 12px; font-size: 0.75rem;">Home \\ Away</th>
-            <th class="matrix-header">0</th>
-            <th class="matrix-header">1</th>
-            <th class="matrix-header">2</th>
-            <th class="matrix-header">3</th>
-            <th class="matrix-header">4</th>
-        </tr>
-    """
+    html = """<style>
+.matrix-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 6px;
+    font-family: 'Inter', sans-serif;
+    margin-top: 1rem;
+}
+.matrix-header {
+    text-align: center;
+    font-weight: 600;
+    color: #A0AEC0;
+    font-size: 0.85rem;
+    padding: 8px;
+}
+.matrix-row-label {
+    font-weight: 600;
+    color: #A0AEC0;
+    font-size: 0.85rem;
+    text-align: right;
+    padding-right: 12px;
+    width: 80px;
+}
+.matrix-cell {
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    transition: all 0.2s ease;
+    position: relative;
+}
+.matrix-cell:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    z-index: 10;
+}
+.highlight-cell {
+    border: 2px solid #00F0FF !important;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+}
+</style>
+<table class="matrix-table">
+<tr>
+    <th></th>
+    <th colspan="5" class="matrix-header" style="border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px;">Away Team Goals ({team_b})</th>
+</tr>
+<tr>
+    <th class="matrix-header" style="text-align: right; padding-right: 12px; font-size: 0.75rem;">Home \\ Away</th>
+    <th class="matrix-header">0</th>
+    <th class="matrix-header">1</th>
+    <th class="matrix-header">2</th>
+    <th class="matrix-header">3</th>
+    <th class="matrix-header">4</th>
+</tr>"""
     for i in range(5):
         html += f"<tr><td class='matrix-row-label'>{i}</td>"
         for j in range(5):
@@ -276,12 +274,10 @@ def render_matrix_html(matrix: List[List[float]], exact_score: Tuple[int, int]) 
             cell_class = "matrix-cell highlight-cell" if is_best else "matrix-cell"
             
             prob_percent = f"{prob*100:.1f}%"
-            html += f"""
-            <td class="{cell_class}" style="background-color: {bg_color}; border: 1px solid rgba(255,255,255,0.04); cursor: default;" title="Score {i}-{j}: {prob_percent}">
-                <div style="font-size: 0.85rem; font-weight: 700;">{i} - {j}</div>
-                <div style="font-size: 0.75rem; opacity: 0.8; margin-top: 1px;">{prob_percent}</div>
-            </td>
-            """
+            html += f"""<td class="{cell_class}" style="background-color: {bg_color}; border: 1px solid rgba(255,255,255,0.04); cursor: default;" title="Score {i}-{j}: {prob_percent}">
+<div style="font-size: 0.85rem; font-weight: 700;">{i} - {j}</div>
+<div style="font-size: 0.75rem; opacity: 0.8; margin-top: 1px;">{prob_percent}</div>
+</td>"""
         html += "</tr>"
     html += "</table>"
     return html
