@@ -204,19 +204,30 @@ def calculate_prediction(
     
     total_weight = h2h_processed["weight"].sum()
     
+    # Calculate general baseline stats for both teams
+    avg_scored_a, avg_conceded_a, _ = get_team_stats(team_a, df_lazy, ref_date)
+    avg_scored_b, avg_conceded_b, _ = get_team_stats(team_b, df_lazy, ref_date)
+    
+    # Global average goals in the dataset to act as scaling baseline
+    global_avg_goals = max(float((df_cached["home_score"].mean() + df_cached["away_score"].mean()) / 2.0), 1.0)
+    
+    # General baseline expected goals (overall recent performance form)
+    lambda_a_gen = avg_scored_a * (avg_conceded_b / global_avg_goals)
+    lambda_b_gen = avg_scored_b * (avg_conceded_a / global_avg_goals)
+    
     # If direct head-to-head exists
     if total_weight > 1e-3:
-        lambda_a = (h2h_processed["goals_a"] * h2h_processed["weight"]).sum() / total_weight
-        lambda_b = (h2h_processed["goals_b"] * h2h_processed["weight"]).sum() / total_weight
+        lambda_a_h2h = (h2h_processed["goals_a"] * h2h_processed["weight"]).sum() / total_weight
+        lambda_b_h2h = (h2h_processed["goals_b"] * h2h_processed["weight"]).sum() / total_weight
+        
+        # Hybrid model: 30% H2H, 70% overall recent performance
+        lambda_a = 0.3 * lambda_a_h2h + 0.7 * lambda_a_gen
+        lambda_b = 0.3 * lambda_b_h2h + 0.7 * lambda_b_gen
         fallback_used = False
     else:
         # 2. Regional averages fallback
         conf_a = conf_map.get(team_a, "UEFA")
         conf_b = conf_map.get(team_b, "UEFA")
-        
-        # Get team stats
-        avg_scored_a, avg_conceded_a, _ = get_team_stats(team_a, df_lazy, ref_date)
-        avg_scored_b, avg_conceded_b, _ = get_team_stats(team_b, df_lazy, ref_date)
         
         # Get confederation stats
         conf_scored_a, conf_conceded_a = get_confederation_stats(conf_a, df_lazy, conf_map, ref_date)
