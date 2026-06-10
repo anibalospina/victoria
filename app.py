@@ -326,31 +326,29 @@ if predict_clicked and not calculate_disabled:
 
     # Display main prediction card
     st.markdown(f"""
-    <div class="result-card">
-        <div class="stat-label">Suggested Winner</div>
-        <div class="outcome-title">{winner_text}</div>
-        <div class="stat-label" style="margin-top: 16px;">Most Probable Final Scoreline</div>
-        <div class="score-display">{score_a} - {score_b}</div>
-        
-        <div style="margin-top: 24px;">
-            <div class="prob-labels">
-                <span>🟢 {team_a}: {prob_a*100:.1f}%</span>
-                <span>⚪ Draw: {prob_draw*100:.1f}%</span>
-                <span>🟠 {team_b}: {prob_b*100:.1f}%</span>
-            </div>
-            <div class="prob-bar-container">
-                <div class="prob-segment-a" style="width: {w_a}%;" title="{team_a} Win: {prob_a*100:.1f}%"></div>
-                <div class="prob-segment-draw" style="width: {w_d}%;" title="Draw: {prob_draw*100:.1f}%"></div>
-                <div class="prob-segment-b" style="width: {w_b}%;" title="{team_b} Win: {prob_b*100:.1f}%"></div>
-            </div>
+<div class="result-card">
+    <div class="stat-label">Suggested Winner</div>
+    <div class="outcome-title">{winner_text}</div>
+    <div class="stat-label" style="margin-top: 16px;">Most Probable Final Scoreline</div>
+    <div class="score-display">{score_a} - {score_b}</div>
+    <div style="margin-top: 24px;">
+        <div class="prob-labels">
+            <span>🟢 {team_a}: {prob_a*100:.1f}%</span>
+            <span>⚪ Draw: {prob_draw*100:.1f}%</span>
+            <span>🟠 {team_b}: {prob_b*100:.1f}%</span>
         </div>
-        
-        <div style="display: flex; justify-content: space-around; margin-top: 16px; font-size: 0.85rem; color: #718096; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
-            <span>Calculation time: {duration:.3f}s</span>
-            <span>Fallback used: {"Yes (Regional Averages)" if res["fallback_used"] else "No (Head-to-Head)"}</span>
+        <div class="prob-bar-container">
+            <div class="prob-segment-a" style="width: {w_a}%;" title="{team_a} Win: {prob_a*100:.1f}%"></div>
+            <div class="prob-segment-draw" style="width: {w_d}%;" title="Draw: {prob_draw*100:.1f}%"></div>
+            <div class="prob-segment-b" style="width: {w_b}%;" title="{team_b} Win: {prob_b*100:.1f}%"></div>
         </div>
     </div>
-    """, unsafe_allow_html=True)
+    <div style="display: flex; justify-content: space-around; margin-top: 16px; font-size: 0.85rem; color: #718096; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+        <span>Calculation time: {duration:.3f}s</span>
+        <span>Fallback used: {"Yes (Regional Averages)" if res["fallback_used"] else "No (Head-to-Head)"}</span>
+    </div>
+</div>
+""", unsafe_allow_html=True)
     
     # Render Alternative Scores Matrix Section
     st.markdown("<h3 style='margin-top: 2rem; color: #FFFFFF; font-size: 1.3rem; margin-bottom: 0.5rem;'>Alternative Score Probability Matrix</h3>", unsafe_allow_html=True)
@@ -361,7 +359,7 @@ if predict_clicked and not calculate_disabled:
 
     # Expected goals breakdown
     st.markdown(f"""
-    <div style="margin-top: 1.5rem; padding: 12px 16px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: #718096; text-align: center;">
-        📊 <strong>Expected Goals (Lambda):</strong> {team_a}: {res["expected_goals_a"]:.2f} goals &nbsp;|&nbsp; {team_b}: {res["expected_goals_b"]:.2f} goals
-    </div>
-    """, unsafe_allow_html=True)
+<div style="margin-top: 1.5rem; padding: 12px 16px; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; color: #718096; text-align: center;">
+    📊 <strong>Expected Goals (Lambda):</strong> {team_a}: {res["expected_goals_a"]:.2f} goals &nbsp;|&nbsp; {team_b}: {res["expected_goals_b"]:.2f} goals
+</div>
+""", unsafe_allow_html=True)
