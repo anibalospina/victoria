@@ -1,4 +1,4 @@
-# Feature Specification: Predict Match
+# Feature Specification: Predict Match (Victoria)
 
 **Feature Branch**: `001-predict-match`
 
@@ -6,7 +6,7 @@
 
 **Status**: Draft
 
-**Input**: User description: "Develop the Football Pool Prediction Assistant, an interactive web application designed to help users determine match outcomes for their football pools. It should allow users to select two international teams, Team A and Team B, from an interactive dropdown or autocomplete list populated by all valid unique countries in the historical dataset. In this initial phase, let's call it "Predict Match," the user interface will focus strictly on a single, one-on-one match setup. There will be no bulk uploading or complex configuration screens. When the user selects the two teams and triggers the calculation, the main view must immediately present the prediction. It will display the most likely overall outcome as Team A Wins, Draw, or Team B Wins, alongside the single most probable exact final scoreline. To maintain transparency, the interface will also show a visual distribution matrix of alternative scores so the user can see the underlying confidence of the prediction. The backend logic will process the historical match records by giving exponentially higher statistical weight to games played in the last 12 to 24 months, ensuring recent form drives the outcome. It will also penalize friendly matches and give high priority to official tournament matches. Unless one of the selected teams is the actual tournament host country, the system will simulate the match under neutral ground rules, eliminating standard home-field advantages. If the two selected teams have no direct head-to-head history, the system will automatically fall back to regional competitive averages to ensure the simulation completes successfully without errors or blank states."
+**Input**: User description: "Develop Victoria, an interactive web application designed to help users determine match outcomes for their football pools. It should allow users to select two international teams, Team A and Team B, from an interactive dropdown or autocomplete list populated by all valid unique countries in the historical dataset. In this initial phase, let's call it "Predict Match," the user interface will focus strictly on a single, one-on-one match setup. There will be no bulk uploading or complex configuration screens. When the user selects the two teams and triggers the calculation, the main view must immediately present the prediction. It will display the most likely overall outcome as Team A Wins, Draw, or Team B Wins, alongside the single most probable exact final scoreline. To maintain transparency, the interface will also show a visual distribution matrix of alternative scores so the user can see the underlying confidence of the prediction. The backend logic will process the historical match records by giving exponentially higher statistical weight to games played in the last 12 to 24 months, ensuring recent form drives the outcome. It will also penalize friendly matches and give high priority to official tournament matches. Unless one of the selected teams is the actual tournament host country, the system will simulate the match under neutral ground rules, eliminating standard home-field advantages. If the two selected teams have no direct head-to-head history, the system will automatically fall back to regional competitive averages to ensure the simulation completes successfully without errors or blank states."
 
 ## Clarifications
 
@@ -68,13 +68,15 @@ Users want to view a visual matrix of alternative score probabilities to underst
 - **FR-002**: The country list MUST be dynamically populated from the unique set of countries present in the historical dataset.
 - **FR-003**: The UI MUST prevent the calculation if Team A and Team B are identical, showing a descriptive validation message.
 - **FR-004**: The system MUST calculate the overall match outcome (Team A Win, Draw, or Team B Win) and the single most probable exact scoreline using a Poisson Distribution model.
-- **FR-005**: The backend logic MUST apply an exponential temporal decay function to historical matches, assigning exponentially higher weight to games played in the last 12 to 24 months.
+- **FR-005**: The backend logic MUST calculate a hybrid expected goals metric by combining recent general performance form (70% weight) and head-to-head history (30% weight) when head-to-head matches exist. It MUST apply an exponential temporal decay function (1-year half-life) to all match records.
 - **FR-006**: The model calculations MUST apply match-type weighting, penalizing friendly matches and prioritizing official tournament matches.
 - **FR-007**: The system MUST simulate matches under neutral ground rules (no home-field advantage) by default.
 - **FR-008**: The system MUST bypass neutral ground rules if the user checks the corresponding "Host Country" checkbox for either Team A or Team B in the UI.
 - **FR-009**: If the two selected teams have no direct head-to-head match history, the system MUST automatically fall back to regional competitive averages to complete the prediction.
 - **FR-010**: The system MUST show a visual distribution matrix of alternative score probabilities.
 - **FR-011**: All analytics calculation functions MUST be implemented as pure functions with full type hinting.
+- **FR-012**: The user interface MUST be localized in Spanish as the primary language.
+- **FR-013**: The application name MUST be "Victoria".
 
 ### Key Entities
 

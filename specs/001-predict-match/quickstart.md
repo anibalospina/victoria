@@ -1,6 +1,6 @@
-# Quickstart & Validation Guide: Predict Match
+# Quickstart & Validation Guide: Predict Match (Victoria)
 
-This guide outlines how to run and validate the Football Pool Prediction Assistant locally.
+This guide outlines how to run and validate Victoria locally.
 
 ## Prerequisites
 - Python 3.11+

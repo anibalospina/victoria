@@ -19,12 +19,12 @@ Templates requiring updates:
 Follow-up TODOs:
   - None
 -->
-# Football Pool Prediction Assistant Constitution
+# Victoria Constitution
 
 ## Core Principles
 
 ### I. One-on-One Match Focus (Strict Scope)
-The Football Pool Prediction Assistant is strictly designed and optimized for one-on-one match analysis (Team A vs Team B). No out-of-scope features (e.g., tournament simulation, league table generators, multi-match accumulator advice) may be introduced without a prior specification update.
+Victoria is strictly designed and optimized for one-on-one match analysis (Team A vs Team B). No out-of-scope features (e.g., tournament simulation, league table generators, multi-match accumulator advice) may be introduced without a prior specification update.
 *Rationale: Restricting the scope keeps the code focused and ensures the UI can deliver predictions quickly and cleanly.*
 
 ### II. Memory-Efficient Polars & No Pandas
@@ -59,7 +59,7 @@ Any code introduced that violates memory constraints, imports unauthorized libra
 *Rationale: Strict gates preserve application performance and stability on the free hosting tier.*
 
 ## Governance
-This Constitution is the supreme authority governing all technical decisions, architecture, and libraries in the Football Pool Prediction Assistant project.
+This Constitution is the supreme authority governing all technical decisions, architecture, and libraries in the Victoria project.
 - **Amendments**: Any change or amendment to these principles requires a formal update to this document, including a version increment.
 - **Versioning Policy**: We use semantic versioning (MAJOR.MINOR.PATCH) for the Constitution version.
   - MAJOR: Removal or weakening of a core constraint or principle.

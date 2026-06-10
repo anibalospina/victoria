@@ -1,11 +1,11 @@
-# Implementation Plan: Predict Match
+# Implementation Plan: Predict Match (Victoria)
 
-**Branch**: `001-predict-match` | **Date**: 2026-06-06 | **Spec**: [spec.md](file:///Users/anibalospina/development/victoria/specs/001-predict-match/spec.md)
+**Branch**: `001-predict-match` | **Date**: 2026-06-06 | **Spec**: [spec.md](file:///specs/001-predict-match/spec.md)
 
 **Input**: Feature specification from `specs/001-predict-match/spec.md`
 
 ## Summary
-The Football Pool Prediction Assistant is an interactive Streamlit application designed to predict the outcome and exact scoreline of a one-on-one match between two selected international teams. The backend implements a Poisson Distribution model using Scipy, combined with an exponential temporal decay function and match-type weighting (penalizing friendlies, prioritizing tournament matches). High-performance data processing is built using Polars LazyFrames, isolated and cached using `@st.cache_data` to ensure low memory footprint on Streamlit Community Cloud.
+Victoria is an interactive Streamlit application designed to predict the outcome and exact scoreline of a one-on-one match between two selected international teams. The backend implements a Poisson Distribution model using Scipy, combined with a hybrid performance engine (70% overall recent performance, 30% H2H), an exponential temporal decay function, and match-type weighting. High-performance data processing is built using Polars LazyFrames, isolated and cached using `@st.cache_data` to ensure low memory footprint on Streamlit Community Cloud.
 
 ## Technical Context
 
