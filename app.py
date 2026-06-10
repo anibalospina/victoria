@@ -45,15 +45,19 @@ st.markdown("""
     }
 
     /* Container for forms */
-    .glass-card {
-        background: rgba(30, 41, 59, 0.45);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        padding: 24px;
-        margin-bottom: 24px;
-        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    div[data-testid="stVerticalBlockBorderWrapper"] {
+        background: rgba(30, 41, 59, 0.45) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        padding: 24px !important;
+        margin-bottom: 24px !important;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+    }
+    div[data-testid="stVerticalBlockBorderWrapper"] > div {
+        border: none !important;
+        padding: 0 !important;
     }
     
     /* Result styling */
@@ -162,25 +166,22 @@ except Exception as e:
     st.stop()
 
 # Form Container
-st.markdown('<div class="glass-card">', unsafe_allow_html=True)
+with st.container(border=True):
+    st.markdown('<h3 style="margin-top: 0; color: #FFFFFF; font-size: 1.3rem; margin-bottom: 1rem;">Setup Match</h3>', unsafe_allow_html=True)
 
-st.markdown('<h3 style="margin-top: 0; color: #FFFFFF; font-size: 1.3rem; margin-bottom: 1rem;">Setup Match</h3>', unsafe_allow_html=True)
+    col1, col2 = st.columns(2)
 
-col1, col2 = st.columns(2)
+    with col1:
+        # Set default to Brazil if present, else first team
+        default_a_idx = teams.index("Brazil") if "Brazil" in teams else 0
+        team_a = st.selectbox("Team A", teams, index=default_a_idx)
+        team_a_host = st.checkbox("Host Country", value=False, key="host_a")
 
-with col1:
-    # Set default to Brazil if present, else first team
-    default_a_idx = teams.index("Brazil") if "Brazil" in teams else 0
-    team_a = st.selectbox("Team A", teams, index=default_a_idx)
-    team_a_host = st.checkbox("Host Country", value=False, key="host_a")
-
-with col2:
-    # Set default to Argentina if present, else second team
-    default_b_idx = teams.index("Argentina") if "Argentina" in teams else (1 if len(teams) > 1 else 0)
-    team_b = st.selectbox("Team B", teams, index=default_b_idx)
-    team_b_host = st.checkbox("Host Country", value=False, key="host_b")
-
-st.markdown('</div>', unsafe_allow_html=True)
+    with col2:
+        # Set default to Argentina if present, else second team
+        default_b_idx = teams.index("Argentina") if "Argentina" in teams else (1 if len(teams) > 1 else 0)
+        team_b = st.selectbox("Team B", teams, index=default_b_idx)
+        team_b_host = st.checkbox("Host Country", value=False, key="host_b")
 
 # Validation check
 teams_are_identical = (team_a == team_b)
