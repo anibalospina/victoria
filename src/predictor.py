@@ -1,14 +1,22 @@
 import polars as pl
 import numpy as np
 from scipy.stats import poisson
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Dict, Tuple, List, Any
 
-def get_team_stats(team: str, df_lazy: pl.LazyFrame, ref_date: datetime) -> Tuple[float, float, float]:
+def get_team_stats(team: str, df_lazy: pl.LazyFrame, ref_date: datetime, recent_only: bool = False) -> Tuple[float, float, float]:
     """
     Compute overall weighted average goals scored and conceded by a team.
+    If recent_only is True, filters matches to the last 24 months (730 days).
     """
-    matches = df_lazy.filter((pl.col("home_team") == team) | (pl.col("away_team") == team))
+    if recent_only:
+        cutoff_date = ref_date - timedelta(days=730)
+        matches = df_lazy.filter(
+            ((pl.col("home_team") == team) | (pl.col("away_team") == team)) &
+            (pl.col("date") >= cutoff_date)
+        )
+    else:
+        matches = df_lazy.filter((pl.col("home_team") == team) | (pl.col("away_team") == team))
     
     days_ago = (ref_date - pl.col("date")).dt.total_days()
     decay_weight = (-0.0019 * days_ago).exp()
@@ -168,7 +176,8 @@ def calculate_prediction(
     team_a_host: bool,
     team_b_host: bool,
     df_cached: pl.DataFrame,
-    conf_map: Dict[str, str]
+    conf_map: Dict[str, str],
+    fsi_map: Dict[str, float] = None
 ) -> Dict[str, Any]:
     """
     Predict the outcome of a match between team_a and team_b.
@@ -204,9 +213,9 @@ def calculate_prediction(
     
     total_weight = h2h_processed["weight"].sum()
     
-    # Calculate general baseline stats for both teams
-    avg_scored_a, avg_conceded_a, _ = get_team_stats(team_a, df_lazy, ref_date)
-    avg_scored_b, avg_conceded_b, _ = get_team_stats(team_b, df_lazy, ref_date)
+    # Calculate general baseline stats for both teams (recent performance form restricted to last 24 months)
+    avg_scored_a, avg_conceded_a, _ = get_team_stats(team_a, df_lazy, ref_date, recent_only=True)
+    avg_scored_b, avg_conceded_b, _ = get_team_stats(team_b, df_lazy, ref_date, recent_only=True)
     
     # Global average goals in the dataset to act as scaling baseline
     global_avg_goals = max(float((df_cached["home_score"].mean() + df_cached["away_score"].mean()) / 2.0), 1.0)
@@ -216,13 +225,19 @@ def calculate_prediction(
     lambda_b_gen = avg_scored_b * (avg_conceded_a / global_avg_goals)
     
     # If direct head-to-head exists
-    if total_weight > 1e-3:
+    if total_weight > 1e-5:
         lambda_a_h2h = (h2h_processed["goals_a"] * h2h_processed["weight"]).sum() / total_weight
         lambda_b_h2h = (h2h_processed["goals_b"] * h2h_processed["weight"]).sum() / total_weight
         
-        # Hybrid model: 30% H2H, 70% overall recent performance
-        lambda_a = 0.3 * lambda_a_h2h + 0.7 * lambda_a_gen
-        lambda_b = 0.3 * lambda_b_h2h + 0.7 * lambda_b_gen
+        # Max decay weight of the H2H matches
+        D = float(h2h_processed["weight"].max()) if len(h2h_processed) > 0 else 0.0
+        
+        # Hybrid model: 30% H2H (scaled by recency decay D), and remainder to overall recent performance form
+        weight_h2h = 0.3 * D
+        weight_gen = 1.0 - weight_h2h
+        
+        lambda_a = weight_h2h * lambda_a_h2h + weight_gen * lambda_a_gen
+        lambda_b = weight_h2h * lambda_b_h2h + weight_gen * lambda_b_gen
         fallback_used = False
     else:
         # 2. Regional averages fallback
@@ -248,6 +263,18 @@ def calculate_prediction(
         lambda_b = attack_strength_b * defense_strength_a * mu_b_to_a
         fallback_used = True
         
+    # Apply Federation Strength Index scaling for inter-confederation matches
+    if fsi_map is not None:
+        conf_a = conf_map.get(team_a, "UEFA")
+        conf_b = conf_map.get(team_b, "UEFA")
+        if conf_a != conf_b:
+            fsi_a = fsi_map.get(conf_a, 1.0)
+            fsi_b = fsi_map.get(conf_b, 1.0)
+            scale_factor_a = fsi_a / fsi_b if fsi_b > 0 else 1.0
+            scale_factor_b = fsi_b / fsi_a if fsi_a > 0 else 1.0
+            lambda_a *= scale_factor_a
+            lambda_b *= scale_factor_b
+
     # Ensure expected goals are non-negative and not excessively small/large
     lambda_a = max(float(lambda_a), 0.05)
     lambda_b = max(float(lambda_b), 0.05)

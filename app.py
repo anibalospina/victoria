@@ -3,7 +3,7 @@ import polars as pl
 import os
 from datetime import datetime
 from typing import Dict, List, Tuple, Any
-from src.utils import load_historical_matches, get_unique_teams, build_confederation_map
+from src.utils import load_historical_matches, get_unique_teams, build_confederation_map, compute_federation_strength_indices
 from src.predictor import calculate_prediction, get_poisson_probabilities
 
 # Configuración de página de Streamlit
@@ -161,6 +161,7 @@ try:
     df_cached = load_historical_matches(DATASET_PATH)
     teams = get_unique_teams(df_cached)
     conf_map = build_confederation_map(df_cached)
+    fsi_map = compute_federation_strength_indices(df_cached, conf_map)
 except Exception as e:
     st.error(f"⚠️ Error al procesar o cargar el conjunto de datos: {e}")
     st.stop()
@@ -288,7 +289,7 @@ if predict_clicked and not calculate_disabled:
         import time
         start_time = time.time()
         res = calculate_prediction(
-            team_a, team_b, team_a_host, team_b_host, df_cached, conf_map
+            team_a, team_b, team_a_host, team_b_host, df_cached, conf_map, fsi_map
         )
         duration = time.time() - start_time
         

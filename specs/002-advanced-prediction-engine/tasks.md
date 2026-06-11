@@ -24,7 +24,7 @@
 
 **Purpose**: Project initialization and basic verification
 
-- [ ] T001 Verify existing dependencies and project state by running pytest in tests/
+- [X] T001 Verify existing dependencies and project state by running pytest in tests/
 
 ---
 
@@ -34,8 +34,8 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T002 Implement compute_federation_strength_indices function in src/utils.py
-- [ ] T003 Write unit tests for FSI calculation in tests/test_predictor.py
+- [X] T002 Implement compute_federation_strength_indices function in src/utils.py
+- [X] T003 Write unit tests for FSI calculation in tests/test_predictor.py
 
 **Checkpoint**: Foundation ready - user story implementation can now begin
 
@@ -50,13 +50,13 @@
 ### Tests for User Story 1
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T004 [P] [US1] Write unit tests for 24-month recent form and H2H decay weight shifting in tests/test_predictor.py
+- [X] T004 [P] [US1] Write unit tests for 24-month recent form and H2H decay weight shifting in tests/test_predictor.py
 
 ### Implementation for User Story 1
 
-- [ ] T005 [US1] Update calculate_prediction and get_team_stats in src/predictor.py to support 24-month recent form filtering
-- [ ] T006 [US1] Implement H2H decay weight shifting in calculate_prediction in src/predictor.py
-- [ ] T007 [US1] Update existing test calls in tests/test_predictor.py to conform to updated signatures
+- [X] T005 [US1] Update calculate_prediction and get_team_stats in src/predictor.py to support 24-month recent form filtering
+- [X] T006 [US1] Implement H2H decay weight shifting in calculate_prediction in src/predictor.py
+- [X] T007 [US1] Update existing test calls in tests/test_predictor.py to conform to updated signatures
 
 **Checkpoint**: User Story 1 is fully functional and testable independently.
 
@@ -70,13 +70,13 @@
 
 ### Tests for User Story 2
 
-- [ ] T008 [P] [US2] Write unit tests for FSI scaling in tests/test_predictor.py
+- [X] T008 [P] [US2] Write unit tests for FSI scaling in tests/test_predictor.py
 
 ### Implementation for User Story 2
 
-- [ ] T009 [US2] Update calculate_prediction in src/predictor.py to apply FSI scaling
-- [ ] T010 [US2] Update app.py to compute, cache, and pass the FSI map to calculate_prediction
-- [ ] T011 [US2] Verify Colombia vs Spain and Argentina vs Iceland simulation flows in app.py
+- [X] T009 [US2] Update calculate_prediction in src/predictor.py to apply FSI scaling
+- [X] T010 [US2] Update app.py to compute, cache, and pass the FSI map to calculate_prediction
+- [X] T011 [US2] Verify Colombia vs Spain and Argentina vs Iceland simulation flows in app.py
 
 **Checkpoint**: User Story 2 is fully functional and testable.
 
@@ -86,9 +86,9 @@
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T012 Run the entire pytest test suite in tests/test_predictor.py
-- [ ] T013 Verify that computation and rendering takes less than 3 seconds in app.py
-- [ ] T014 Run the validation scenarios listed in specs/002-advanced-prediction-engine/quickstart.md
+- [X] T012 Run the entire pytest test suite in tests/test_predictor.py
+- [X] T013 Verify that computation and rendering takes less than 3 seconds in app.py
+- [X] T014 Run the validation scenarios listed in specs/002-advanced-prediction-engine/quickstart.md
 
 ---
 
