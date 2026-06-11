@@ -134,3 +134,59 @@ def build_confederation_map(df_cached: pl.DataFrame) -> Dict[str, str]:
             conf_map[team] = conf
             
     return conf_map
+
+@st.cache_data
+def compute_federation_strength_indices(df_cached: pl.DataFrame, conf_map: Dict[str, str]) -> Dict[str, float]:
+    """
+    Compute Federation Strength Index (FSI) for all confederations using historical
+    World Cup matches played between teams of different confederations.
+    """
+    # Filter for World Cup matches
+    wc_matches = df_cached.filter(pl.col("tournament") == "FIFA World Cup")
+    
+    # Initialize counts
+    confederations = ["UEFA", "CONMEBOL", "CAF", "AFC", "CONCACAF", "OFC"]
+    conf_points = {c: 0.0 for c in confederations}
+    conf_matches = {c: 0 for c in confederations}
+    
+    # Iterate over matches
+    for row in wc_matches.iter_rows(named=True):
+        home_team = row["home_team"]
+        away_team = row["away_team"]
+        
+        conf_h = conf_map.get(home_team)
+        conf_a = conf_map.get(away_team)
+        
+        # Only check inter-confederation matches
+        if conf_h and conf_a and conf_h != conf_a:
+            home_score = row["home_score"]
+            away_score = row["away_score"]
+            
+            if home_score is not None and away_score is not None:
+                conf_matches[conf_h] += 1
+                conf_matches[conf_a] += 1
+                
+                if home_score > away_score:
+                    conf_points[conf_h] += 3.0
+                elif away_score > home_score:
+                    conf_points[conf_a] += 3.0
+                else:
+                    conf_points[conf_h] += 1.0
+                    conf_points[conf_a] += 1.0
+                    
+    total_points = sum(conf_points.values())
+    total_slots = sum(conf_matches.values())
+    
+    global_avg = total_points / total_slots if total_slots > 0 else 1.0
+    
+    fsi_map = {}
+    for c in confederations:
+        m_count = conf_matches[c]
+        if m_count > 0 and global_avg > 0:
+            avg_pts = conf_points[c] / m_count
+            fsi_map[c] = float(avg_pts / global_avg)
+        else:
+            fsi_map[c] = 1.0
+            
+    return fsi_map
+
